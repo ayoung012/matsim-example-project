@@ -32,6 +32,8 @@ import org.matsim.core.router.LinkWrapperFacility;
 import org.matsim.core.router.NetworkRoutingModule;
 import org.matsim.core.router.costcalculators.OnlyTimeDependentTravelDisutility;
 import org.matsim.core.router.util.LeastCostPathCalculator;
+import org.matsim.core.router.DijkstraRecordFactory;
+import org.matsim.core.router.AStarEuclideanRecordFactory;
 import org.matsim.core.router.AStarLandmarksRecordFactory;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
@@ -85,12 +87,17 @@ public class RouterSingleTest{
 			TravelTime travelTime = new FreeSpeedTravelTime();
 			TravelDisutility travelDisutility = new OnlyTimeDependentTravelDisutility(travelTime);
 
-			//LeastCostPathCalculator router = new DijkstraTestFactory().createPathCalculator(network, travelDisutility,
+			//LeastCostPathCalculator router = new DijkstraRecordFactory().createPathCalculator(network, travelDisutility,
 			//LeastCostPathCalculator router = new AStarEuclideanRecordFactory().createPathCalculator(network, travelDisutility,
 			LeastCostPathCalculator router = new AStarLandmarksRecordFactory().createPathCalculator(network, travelDisutility,
 					travelTime);
 			NetworkRoutingModule routingModule = new NetworkRoutingModule("car", scenario.getPopulation().getFactory(), network,
 					router);
+
+            System.out.println("AAA");
+            System.out.println("AAA--------------------------");
+            System.out.println("AAA Constructed Network AStarLandmarks");
+            System.out.println("AAA--------------------------");
 
 			Leg leg = (Leg) routingModule
 					.calcRoute(new LinkWrapperFacility(link12), new LinkWrapperFacility(link45), 0.0, person).get(0);
@@ -126,6 +133,11 @@ public class RouterSingleTest{
 			NetworkRoutingModule routingModule = new NetworkRoutingModule("car", scenario.getPopulation().getFactory(), network,
 					router);
 
+            System.out.println("AAA");
+            System.out.println("AAA--------------------------");
+            System.out.println("AAA Simple Network AStarLandmarks");
+            System.out.println("AAA--------------------------");
+
 			Leg leg = (Leg) routingModule
 					.calcRoute(new LinkWrapperFacility(linkfrom), new LinkWrapperFacility(linkto), 0.0, person).get(0);
 
@@ -157,17 +169,99 @@ public class RouterSingleTest{
 			TravelTime travelTime = new FreeSpeedTravelTime();
 			TravelDisutility travelDisutility = new OnlyTimeDependentTravelDisutility(travelTime);
 
-			//LeastCostPathCalculator router = new DijkstraTestFactory().createPathCalculator(network, travelDisutility,
-			//LeastCostPathCalculator router = new AStarEuclideanRecordFactory().createPathCalculator(network, travelDisutility,
+			LeastCostPathCalculator router = new DijkstraRecordFactory().createPathCalculator(network, travelDisutility,
+					travelTime);
+			NetworkRoutingModule routingModule = new NetworkRoutingModule("car", scenario.getPopulation().getFactory(), network,
+					router);
+
+            System.out.println("AAA");
+            System.out.println("AAA--------------------------");
+            System.out.println("AAA Anglesea Freespeed Dijkstra");
+            System.out.println("AAA--------------------------");
+
+			Leg leg = (Leg) routingModule
+					.calcRoute(new LinkWrapperFacility(linkfrom), new LinkWrapperFacility(linkto), 0.0, person).get(0);
+
+		}
+
+		@Test
+		/*
+         * Run a single agent with a single plan on AStarEuclidean
+		 */
+		public void testAStarEuclideanOnFreeSpeedAnglesea() {
+            String configFile = "~/rmitcs/ees/ees/scenarios/surf-coast-shire/anglesea-12k/scenario_matsim_main.xml";
+			Scenario scenario = ScenarioUtils.loadScenario(ConfigUtils.loadConfig(configFile));
+            
+			Network network = scenario.getNetwork();
+
+			Node node2 = network.getFactory().createNode(Id.createNodeId("1763048114"), new Coord(0.0, 0.0));
+			Node node3 = network.getFactory().createNode(Id.createNodeId("288435917"), new Coord(0.0, 0.0));
+			Node node9 = network.getFactory().createNode(Id.createNodeId("2315437915"), new Coord(0.0, 0.0));
+			Node node12 = network.getFactory().createNode(Id.createNodeId("3545568272"), new Coord(0.0, 0.0));
+
+            String linkFromId = "10040-10041-9998-9999-10000-10001-10002";
+            String linkToId = "10121";
+
+			Link linkfrom = network.getFactory().createLink(Id.createLinkId("10040-10041-9998-9999-10000-10001-10002"), node2, node3);
+			Link linkto = network.getFactory().createLink(Id.createLinkId("10121"), node9, node12);
+
+            Person person = addPersonWithPlanToPopulation(scenario);
+
+			TravelTime travelTime = new FreeSpeedTravelTime();
+			TravelDisutility travelDisutility = new OnlyTimeDependentTravelDisutility(travelTime);
+
+			LeastCostPathCalculator router = new AStarEuclideanRecordFactory().createPathCalculator(network, travelDisutility,
+					travelTime);
+			NetworkRoutingModule routingModule = new NetworkRoutingModule("car", scenario.getPopulation().getFactory(), network,
+					router);
+
+            System.out.println("AAA");
+            System.out.println("AAA--------------------------");
+            System.out.println("AAA Anglesea Freespeed AStarEuclidean");
+            System.out.println("AAA--------------------------");
+			Leg leg = (Leg) routingModule
+					.calcRoute(new LinkWrapperFacility(linkfrom), new LinkWrapperFacility(linkto), 0.0, person).get(0);
+
+		}
+
+		@Test
+		/*
+         * Run a single agent with a single plan on Dijkstra
+		 */
+		public void testAStarLandmarksOnFreeSpeedAnglesea() {
+            String configFile = "~/rmitcs/ees/ees/scenarios/surf-coast-shire/anglesea-12k/scenario_matsim_main.xml";
+			Scenario scenario = ScenarioUtils.loadScenario(ConfigUtils.loadConfig(configFile));
+            
+			Network network = scenario.getNetwork();
+
+			Node node2 = network.getFactory().createNode(Id.createNodeId("1763048114"), new Coord(0.0, 0.0));
+			Node node3 = network.getFactory().createNode(Id.createNodeId("288435917"), new Coord(0.0, 0.0));
+			Node node9 = network.getFactory().createNode(Id.createNodeId("2315437915"), new Coord(0.0, 0.0));
+			Node node12 = network.getFactory().createNode(Id.createNodeId("3545568272"), new Coord(0.0, 0.0));
+
+            String linkFromId = "10040-10041-9998-9999-10000-10001-10002";
+            String linkToId = "10121";
+
+			Link linkfrom = network.getFactory().createLink(Id.createLinkId("10040-10041-9998-9999-10000-10001-10002"), node2, node3);
+			Link linkto = network.getFactory().createLink(Id.createLinkId("10121"), node9, node12);
+
+            Person person = addPersonWithPlanToPopulation(scenario);
+
+			TravelTime travelTime = new FreeSpeedTravelTime();
+			TravelDisutility travelDisutility = new OnlyTimeDependentTravelDisutility(travelTime);
+
 			LeastCostPathCalculator router = new AStarLandmarksRecordFactory().createPathCalculator(network, travelDisutility,
 					travelTime);
 			NetworkRoutingModule routingModule = new NetworkRoutingModule("car", scenario.getPopulation().getFactory(), network,
 					router);
 
+            System.out.println("AAA");
+            System.out.println("AAA--------------------------");
+            System.out.println("AAA Anglesea Freespeed AStarLandmarks");
+            System.out.println("AAA--------------------------");
 			Leg leg = (Leg) routingModule
 					.calcRoute(new LinkWrapperFacility(linkfrom), new LinkWrapperFacility(linkto), 0.0, person).get(0);
 
-			//Assert.assertEquals(adjustedRoutingTravelTime, 202.0, 1e-3);
 		}
 
         public Person addPersonWithPlanToPopulation(Scenario scenario) {

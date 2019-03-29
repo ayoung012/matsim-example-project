@@ -25,7 +25,7 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.core.router.util.AStarNodeData;
-import org.matsim.core.router.util.PreProcessLandmarks;
+import org.matsim.core.router.util.PreProcessEuclidean;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.router.util.*;
@@ -78,13 +78,13 @@ import org.matsim.vehicles.Vehicle;
  * @see org.matsim.core.router.AStarLandmarks
  * @author lnicolas
  */
-public class AStarLandmarksRecord extends AStarLandmarksProtected {
-	private static final Logger log = Logger.getLogger( AStarLandmarksRecord.class ) ;
+public class AStarEuclideanRecord extends AStarEuclideanProtected {
+	private static final Logger log = Logger.getLogger( AStarEuclideanRecord.class ) ;
 
     private int visitedNodes = 0;
 
-    AStarLandmarksRecord(final Network network,
-                final PreProcessLandmarks preProcessData,
+    AStarEuclideanRecord(final Network network,
+                final PreProcessEuclidean preProcessData,
                 final TravelDisutility costFunction, final TravelTime timeFunction, final double overdoFactor) {
         super(network, preProcessData, costFunction, timeFunction, overdoFactor);
     }
@@ -92,9 +92,6 @@ public class AStarLandmarksRecord extends AStarLandmarksProtected {
 
 	/**
 	 * Inserts the given Node n into the pendingNodes queue and updates its time and cost information.
-     *
-     * NOTE: This is not overriding as I expect it should. Visited nodes comes out as 1. Ideally I override the
-     * AStarEuclidean implementation of visitNode, but it is a private method, no overriding...
 	 * 
 	 * @param n The Node that is revisited.
 	 * @param data The data for node.
@@ -105,8 +102,8 @@ public class AStarLandmarksRecord extends AStarLandmarksProtected {
 	 */
     @Override
 	protected void visitNode(final Node n, final AStarNodeData data, final RouterPriorityQueue<Node> pendingNodes,
-			final double time, final double cost, final double estCost, final Link outLink) {
-        super.visitNode(n, data, pendingNodes, time, cost, estCost, outLink);
+			final double time, final double cost, final double expectedRemainingCost, final Link outLink) {
+        super.visitNode(n, data, pendingNodes, time, cost, expectedRemainingCost, outLink);
         visitedNodes += 1;
 	}
 	
