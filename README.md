@@ -1,8 +1,8 @@
-# matsim-example-project
+# Routing Algorithm Experiments
 
-A small example of how to use MATSim as a library.
+This project tests routing algorithms in various networks. Currently a single route by a single person is tested.
 
-By default, this project uses the latest (pre-)release. In order to use a different version, edit `pom.xml`.
+
 
 A recommended directory structure is as follows:
 * `src` for sources
@@ -24,6 +24,3 @@ Sometimes, step 3 does not work, in particular after previously failed attempts.
 right-click to `configure->convert to maven project`.  If that fails, the best thing seems to remove all 
 pieces of the failed attempt in the directory and start over.
 
-### Import into IntelliJ
-
-... todo ...
